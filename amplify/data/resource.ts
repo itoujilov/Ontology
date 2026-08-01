@@ -4,9 +4,9 @@ import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 // specifies that any user authenticated via an API key can "create", "read",
 // "update", and "delete" any records.
 const schema = a.schema({
-  ontology_module: a
+  ontologyModule: a
     .model({
-      id: a.url(),
+      url: a.url(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
 });
