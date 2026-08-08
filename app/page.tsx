@@ -14,19 +14,15 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export default function App() {
-  const { signOut } = useAuthenticator();
+  const { user, signOut } = useAuthenticator();
   return (
     <main>
+      User {user?.signInDetails?.loginId}
       <button onClick={signOut}>Sign out</button>
       <h1>Ontology Modules</h1>
       <button>Create Ontology Module</button>
       <ul>
       </ul>
-      <div>
-        <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-          Review next steps of development.
-        </a>
-      </div>
     </main>
   );
 }
