@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
@@ -13,8 +14,10 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export default function App() {
+  const { signOut } = useAuthenticator();
   return (
     <main>
+      <button onClick={signOut}>Sign out</button>
       <h1>Ontology Modules</h1>
       <button>Create Ontology Module</button>
       <ul>
