@@ -1,11 +1,13 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { isIri } from "@hyperjump/uri";
 
 // The section below creates database tables.
 const schema = a.schema({
   ontologyModule: a
     .model({
-      url: a.url(),
-      }).authorization(allow => [allow.owner()]),
+      iri: a.url(),
+    })
+    .authorization(allow => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
