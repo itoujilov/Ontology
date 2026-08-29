@@ -5,7 +5,7 @@ import { isIri } from "@hyperjump/uri";
 const schema = a.schema({
   ontologyModule: a
     .model({
-      iri: a.url(),
+      iri: a.string(),
     })
     .authorization(allow => [allow.owner()]),
 });
