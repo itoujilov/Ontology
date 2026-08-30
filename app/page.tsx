@@ -1,14 +1,16 @@
 "use client";
 
-import { useAuthenticator } from "@aws-amplify/ui-react";
-import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useState } from "react";
+import OntologyModuleCreator from "./OntologyModuleCreator";
+import { Amplify } from "aws-amplify";
+
+import type { Schema } from "@/amplify/data/resource";
+
 import "./../app/app.css";
 import "@aws-amplify/ui-react/styles.css";
-import OntologyModuleCreator from "./OntologyModuleCreator";
 
 Amplify.configure(outputs);
 
