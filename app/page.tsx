@@ -70,17 +70,30 @@ export default function App() {
     };
   }, [ontologyModulesSynced]);
 
+  function delete_ontology_module(id: string) {
+    client.models.ontologyModule.delete({ id: id});
+  }
+
   return (
     <main>
       User {user?.signInDetails?.loginId}
       <button onClick={signOut}>Sign out</button>
       <h1>Ontology Modules</h1>
       <ul>
+        {ontologyModules.map((module) =>
+          <li key={module.iri}>
+            {module.iri}
+            <button onClick={() => delete_ontology_module(module.id)}>
+              Delete
+            </button>
+          </li>
+        )}
       </ul>
       {ontologyModulesSynced && (
       <OntologyModuleCreator
         ontologyModules={ontologyModules}
         onCreate={(newModule: string) => {
+          client.models.ontologyModule.create({ iri: newModule });
         }}
       />
       )}
