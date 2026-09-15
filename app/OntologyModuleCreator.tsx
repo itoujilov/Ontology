@@ -1,8 +1,18 @@
 "use client";
 import { isIri } from "@hyperjump/uri";
-import { useState } from "react";
+import React, { useState } from "react";
+import type { Schema } from '@/amplify/data/resource'
 
-export default function OntologyModuleCreator() {
+type OntologyModule = Schema['ontologyModule']['type'];
+
+interface OntologyModuleCreatorProperties {
+  ontologyModules: OntologyModule[];
+  onCreate: {(newModule: string): void}
+}
+
+export const OntologyModuleCreator: React.FC<OntologyModuleCreatorProperties> =
+  ({ontologyModules, onCreate}) => {
+
   const [error, setError] = useState("");
 
   function createOntologyModule() {
@@ -21,6 +31,18 @@ export default function OntologyModuleCreator() {
     if (!isIri(IRI)) {
       setError("IRI must be a well-formed RFC 3987 IRI.");
       return;
+    }
+
+    if (ontologyModules.some(m => m.iri === IRI)) {
+      setError("IRI must be unique within your namespace.");
+      return;
+    }
+
+    try {
+      onCreate(IRI);
+    }
+    catch {
+      
     }
 
     setError("");
