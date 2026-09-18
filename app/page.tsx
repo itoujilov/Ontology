@@ -80,7 +80,9 @@ export default function App() {
       <button onClick={signOut}>Sign out</button>
       <h1>Ontology Modules</h1>
       <ul>
-        {ontologyModules.map((module) =>
+        {ontologyModules
+          .sort((a, b) => a.iri!.localeCompare(b.iri!))
+          .map((module) =>
           <li key={module.iri}>
             {module.iri}
             <button onClick={() => delete_ontology_module(module.id)}>
