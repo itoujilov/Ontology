@@ -6,6 +6,17 @@ const schema = a.schema({
   ontologyModule: a
     .model({
       iri: a.string(),
+
+      // Description
+      // This is a Dublin Core description of the ontology module.
+      // It is a multilingual object with the language keys and HTML content,
+      // for example:
+      // {
+      //   en: "<p>Hello</p>",
+      //   de: "<p>Hallo</p>",
+      //   fr: "<p>Bonjour</p>"
+      // }
+      description: a.json(),
     })
     .authorization(allow => [allow.owner()]),
 });
