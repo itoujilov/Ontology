@@ -63,3 +63,15 @@ body {
     font-weight: 800;
     text-decoration: none;
   }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  td, th {
+    border: none;
+  }
+
+  tr {
+    border-bottom: 1px solid #ccc;
+  }
