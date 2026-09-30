@@ -7,7 +7,7 @@ import "@aws-amplify/ui-react/styles.css";
 const inter = Inter({ subsets: ["latin"] });
 
 // To do: Manually update this string whenever you release a new version.
-const current_version = "1.3.0";
+const current_version = "1.3.1";
 
 export const metadata: Metadata = {
   title: `Ontology App V${current_version}`,

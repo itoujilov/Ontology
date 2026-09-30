@@ -1,21 +1,22 @@
-type SupportedLanguage = "en" | "de" | "fr";
-export type { SupportedLanguage };
+import { languages } from "./languages";
 
 interface Properties {
-  language: SupportedLanguage;
-  onChange: (lang: SupportedLanguage) => void;
+  language_code: string;
+  onChange: (language_code: string) => void;
 }
 
-export function LanguageSelector({ language, onChange }: Properties) {
+export function LanguageSelector({ language_code, onChange }: Properties) {
   return (
     <select
-      value={language}
-      onChange={e => onChange(e.target.value as SupportedLanguage)}
+      value={language_code}
+      onChange={e => onChange(e.target.value as string)}
       style={{ marginBottom: 16 }}
     >
-      <option value="en">English</option>
-      <option value="de">Deutsch</option>
-      <option value="fr">Français</option>
+      {languages.map(({ code, name }) => (
+        <option key={code} value={code}>
+          {name}
+        </option>
+      ))}
     </select>
   );
 }

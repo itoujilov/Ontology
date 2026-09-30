@@ -1,6 +1,7 @@
 "use client";
 
 import { generateClient } from "aws-amplify/data";
+import { languages } from "./languages";
 import outputs from "@/amplify_outputs.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useEffect, useState } from "react";
@@ -9,7 +10,6 @@ import { MultilingualEditor } from "./MultilingualEditor";
 import { OntologyModuleCreator } from "./OntologyModuleCreator";
 
 import type { Schema } from "@/amplify/data/resource";
-import type { SupportedLanguage } from "./LanguageSelector";
 
 import "./../app/app.css";
 import "@aws-amplify/ui-react/styles.css";
@@ -17,7 +17,6 @@ import "@aws-amplify/ui-react/styles.css";
 Amplify.configure(outputs);
 
 const client = generateClient<Schema>();
-const languages: SupportedLanguage[] = ["en", "de", "fr"];
 
 export default function App() {
   const { user, signOut } = useAuthenticator();
@@ -101,8 +100,8 @@ export default function App() {
               module.description : {};
 
             const initialContent = Object.fromEntries(
-              languages.map((l) => [l, description[l] ?? ""])
-            ) as Record<SupportedLanguage, string>;
+              languages.map((l) => [l, description[l.code] ?? ""])
+            ) as Record<string, string>;
 
             return (
             <tr key={module.iri}>
@@ -115,7 +114,7 @@ export default function App() {
               <td>
                   <MultilingualEditor
                     initialContent={initialContent}
-                    onSave={(l: SupportedLanguage, html: string) => {}}
+                    onSave={(l: string, html: string) => {}}
                   />
               </td>
             </tr>
