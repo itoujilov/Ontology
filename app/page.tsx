@@ -70,7 +70,7 @@ export default function App() {
       createSubscription.unsubscribe();
       deleteSubscription.unsubscribe();
     };
-  }, [ontologyModulesSynced]);
+  }, []);
 
   function delete_ontology_module(id: string) {
     client.models.ontologyModule.delete({ id: id});
