@@ -114,7 +114,34 @@ export default function App() {
               <td>
                   <MultilingualEditor
                     initialContent={initialContent}
-                    onSave={(l: string, html: string) => {}}
+                    onSave={async (l: string, html: string) => {
+                      try {
+                        const existing = await client.models.ontologyModule.get(
+                          { id: module.id });
+
+                        if (!existing?.data) return;
+
+                        const currentDescription =
+                          typeof existing.data.description === "object" &&
+                          existing.data.description !== null
+                            ? existing.data.description
+                            : {};
+
+                        // Update only the edited language.
+                        const updatedDescription = {
+                          ...currentDescription,
+                          [l]: html,
+                        };
+
+                        await client.models.ontologyModule.update({
+                          id: module.id,
+                          description: updatedDescription
+                        });
+                      } catch (error) {
+                        console.error(
+                          "Failed to update multilingual description:", error);
+                      }
+                    }}
                   />
               </td>
             </tr>
