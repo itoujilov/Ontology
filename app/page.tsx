@@ -96,11 +96,17 @@ export default function App() {
         {ontologyModules
           .sort((a, b) => a.iri!.localeCompare(b.iri!))
           .map((module) => {
-            const description = isMultilingualDescription(module.description) ?
-              module.description : {};
+            const description =
+              typeof module.description === "string"
+                ? JSON.parse(module.description)
+                : module.description;
 
             const initialContent = Object.fromEntries(
-              languages.map((l) => [l, description[l.code] ?? ""])
+              languages.map((l) => (
+                description
+                ? [l, description[l.code] ?? ""]
+                : [l, ""]
+              ))
             ) as Record<string, string>;
 
             return (
@@ -112,37 +118,42 @@ export default function App() {
                 </button>
               </td>
               <td>
-                  <MultilingualEditor
-                    initialContent={initialContent}
-                    onSave={async (l: string, html: string) => {
-                      try {
-                        const existing = await client.models.ontologyModule.get(
-                          { id: module.id });
+                <MultilingualEditor
+                  initialContent={initialContent}
+                  onSave={async (l: string, html: string) => {
+                    const raw = module.description ?? {};
 
-                        if (!existing?.data) return;
+                    const currentDescription =
+                      typeof raw === "string"
+                        ? JSON.parse(raw)
+                        // strips non‑JSON fields
+                        : JSON.parse(JSON.stringify(raw));
 
-                        const currentDescription =
-                          typeof existing.data.description === "object" &&
-                          existing.data.description !== null
-                            ? existing.data.description
-                            : {};
+                    const updatedDescription = {
+                      ...currentDescription,
+                      [l]: html,
+                    };
 
-                        // Update only the edited language.
-                        const updatedDescription = {
-                          ...currentDescription,
-                          [l]: html,
-                        };
+                    const { data, errors } =
+                      await client.models.ontologyModule.update({
+                      id: module.id,
+                      description: JSON.stringify(updatedDescription)
+                    });
 
-                        await client.models.ontologyModule.update({
-                          id: module.id,
-                          description: updatedDescription
-                        });
-                      } catch (error) {
-                        console.error(
-                          "Failed to update multilingual description:", error);
-                      }
-                    }}
-                  />
+                    if (errors && errors.length > 0) {
+                      console.error("Amplify update errors:", errors);
+                      return;
+                    }
+
+                    setOntologyModules((prev) =>
+                      prev.map((m) =>
+                        m.id === module.id
+                          ? { ...m, description: updatedDescription }
+                          : m
+                      )
+                    );
+                  }}
+                />
               </td>
             </tr>
             )
