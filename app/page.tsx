@@ -86,8 +86,12 @@ export default function App() {
     };
   }, []);
 
-  function delete_ontology_module(id: string) {
-    client.models.ontologyModule.delete({ id: id});
+  async function delete_ontology_module(id: string) {
+    try {
+      await client.models.ontologyModule.delete({ id });
+    } catch (error) {
+      console.error("Failed to delete module:", error);
+    }
   }
 
   return (
