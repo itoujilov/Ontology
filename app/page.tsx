@@ -94,6 +94,17 @@ export default function App() {
     }
   }
 
+  function parseDescription(descriptionField: unknown): Record<string, string> {
+    if (!descriptionField) return {};
+    if (typeof descriptionField !== "string") return {};
+    try {
+      const parsed = JSON.parse(descriptionField);
+      return typeof parsed === "object" && parsed !== null ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
   return (
     <main>
       User {user?.signInDetails?.loginId}
