@@ -53,6 +53,19 @@ export default function App() {
           "ontologyModule creation handler exception:", error)
       });
 
+    const updateSubscription = client.models.ontologyModule
+      .onUpdate()
+      .subscribe({
+        next: (updatedItem) => {
+          if (!updatedItem || !updatedItem.id) return;
+          setOntologyModules((previous) =>
+            previous.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+          );
+        },
+        error: (error) => console.warn(
+          "ontologyModule update handler exception:", error)
+      });
+
     const deleteSubscription = client.models.ontologyModule
       .onDelete()
       .subscribe({
@@ -68,6 +81,7 @@ export default function App() {
 
     return () => {
       createSubscription.unsubscribe();
+      updateSubscription.unsubscribe();
       deleteSubscription.unsubscribe();
     };
   }, []);
@@ -139,14 +153,6 @@ export default function App() {
                       console.error("Amplify update errors:", errors);
                       return;
                     }
-
-                    setOntologyModules((prev) =>
-                      prev.map((m) =>
-                        m.id === module.id
-                          ? { ...m, description: updatedDescription }
-                          : m
-                      )
-                    );
                   }}
                 />
               </td>
