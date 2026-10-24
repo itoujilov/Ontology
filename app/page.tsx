@@ -120,19 +120,10 @@ export default function App() {
         {[...ontologyModules]
           .sort((a, b) => (a.iri ?? "").localeCompare(b.iri ?? ""))
           .map((module) => {
-            const description =
-              typeof module.description === "string"
-                ? JSON.parse(module.description)
-                : module.description;
-
+            const descriptionMap = parseDescription(module.description);
             const initialContent = Object.fromEntries(
-              languages.map((l) => (
-                description
-                ? [l, description[l.code] ?? ""]
-                : [l, ""]
-              ))
-            ) as Record<string, string>;
-
+                languages.map((l) => [l.code, descriptionMap[l.code] ?? ""])
+              ) as Record<string, string>;
             return (
             <tr key={module.iri}>
               <td>
