@@ -117,8 +117,8 @@ export default function App() {
           </tr>
         </thead>
         <tbody>
-        {ontologyModules
-          .sort((a, b) => a.iri!.localeCompare(b.iri!))
+        {[...ontologyModules]
+          .sort((a, b) => (a.iri ?? "").localeCompare(b.iri ?? ""))
           .map((module) => {
             const description =
               typeof module.description === "string"
