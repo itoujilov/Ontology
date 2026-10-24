@@ -125,7 +125,7 @@ export default function App() {
                 languages.map((l) => [l.code, descriptionMap[l.code] ?? ""])
               ) as Record<string, string>;
             return (
-            <tr key={module.iri}>
+            <tr key={module.id}>
               <td>
                 {module.iri}<br/>
                 <button onClick={() => delete_ontology_module(module.id)}>
