@@ -76,11 +76,6 @@ export default function App() {
     client.models.ontologyModule.delete({ id: id});
   }
 
-  function isMultilingualDescription(value: unknown):
-    value is Record<string, string> {
-    return typeof value === "object" && value !== null;
-  }
-
   return (
     <main>
       User {user?.signInDetails?.loginId}
