@@ -160,11 +160,15 @@ export default function App() {
         </tbody>
       </table>
       {ontologyModulesSynced && (
-      <OntologyModuleCreator
-        ontologyModules={ontologyModules}
-        onCreate={(newModule: string) => {
-          client.models.ontologyModule.create({ iri: newModule });
-        }}
+        <OntologyModuleCreator
+          ontologyModules={ontologyModules}
+          onCreate={async (newModuleIri: string) => {
+            try {
+              await client.models.ontologyModule.create({ iri: newModuleIri });
+            } catch (error) {
+              console.error("Failed to create ontology module:", error);
+            }
+          }}
       />
       )}
     </main>
