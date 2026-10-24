@@ -135,25 +135,17 @@ export default function App() {
               <td>
                 <MultilingualEditor
                   initialContent={initialContent}
-                  onSave={async (l: string, html: string) => {
-                    const raw = module.description ?? {};
-
-                    const currentDescription =
-                      typeof raw === "string"
-                        ? JSON.parse(raw)
-                        // strips non‑JSON fields
-                        : JSON.parse(JSON.stringify(raw));
-
+                  onSave={async (langCode: string, html: string) => {
                     const updatedDescription = {
-                      ...currentDescription,
-                      [l]: html,
+                      ...descriptionMap,
+                      [langCode]: html,
                     };
 
-                    const { data, errors } =
+                    const { errors } =
                       await client.models.ontologyModule.update({
-                      id: module.id,
-                      description: JSON.stringify(updatedDescription)
-                    });
+                          id: module.id,
+                          description: JSON.stringify(updatedDescription)
+                        });
 
                     if (errors && errors.length > 0) {
                       console.error("Amplify update errors:", errors);
