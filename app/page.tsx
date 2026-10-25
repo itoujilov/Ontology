@@ -135,10 +135,10 @@ export default function App() {
               <td>
                 <MultilingualEditor
                   initialContent={initialContent}
-                  onSave={async (langCode: string, html: string) => {
+                  onSave={async (languageCode: string, html: string) => {
                     const updatedDescription = {
                       ...descriptionMap,
-                      [langCode]: html,
+                      [languageCode]: html,
                     };
 
                     const { errors } =
