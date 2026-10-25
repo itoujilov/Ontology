@@ -1,13 +1,12 @@
 "use client";
 
 import { generateClient } from "aws-amplify/data";
-import { languages } from "./languages";
 import outputs from "@/amplify_outputs.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useEffect, useState } from "react";
 import { Amplify } from "aws-amplify";
-import { MultilingualEditor } from "./MultilingualEditor";
 import { OntologyModuleCreator } from "./OntologyModuleCreator";
+import { OntologyModuleRow} from "./OntologyModuleRow";
 
 import type { Schema } from "@/amplify/data/resource";
 
@@ -94,17 +93,6 @@ export default function App() {
     }
   }
 
-  function parseDescription(descriptionField: unknown): Record<string, string> {
-    if (!descriptionField) return {};
-    if (typeof descriptionField !== "string") return {};
-    try {
-      const parsed = JSON.parse(descriptionField);
-      return typeof parsed === "object" && parsed !== null ? parsed : {};
-    } catch {
-      return {};
-    }
-  }
-
   return (
     <main>
       User {user?.signInDetails?.loginId}
@@ -117,46 +105,18 @@ export default function App() {
           </tr>
         </thead>
         <tbody>
-        {[...ontologyModules]
-          .sort((a, b) => (a.iri ?? "").localeCompare(b.iri ?? ""))
-          .map((module) => {
-            const descriptionMap = parseDescription(module.description);
-            const initialContent = Object.fromEntries(
-                languages.map((l) => [l.code, descriptionMap[l.code] ?? ""])
-              ) as Record<string, string>;
-            return (
-            <tr key={module.id}>
-              <td>
-                {module.iri}<br/>
-                <button onClick={() => delete_ontology_module(module.id)}>
-                  Delete
-                </button>
-              </td>
-              <td>
-                <MultilingualEditor
-                  initialContent={initialContent}
-                  onSave={async (languageCode: string, html: string) => {
-                    const updatedDescription = {
-                      ...descriptionMap,
-                      [languageCode]: html,
-                    };
-
-                    const { errors } =
-                      await client.models.ontologyModule.update({
-                          id: module.id,
-                          description: JSON.stringify(updatedDescription)
-                        });
-
-                    if (errors && errors.length > 0) {
-                      console.error("Amplify update errors:", errors);
-                      return;
-                    }
-                  }}
+          {[...ontologyModules]
+            .sort((a, b) => (a.iri ?? "").localeCompare(b.iri ?? ""))
+            .map((module) => {
+              return (
+                <OntologyModuleRow
+                  key={module.id}
+                  module={module}
+                  client={client}
+                  onDelete={delete_ontology_module}
                 />
-              </td>
-            </tr>
-            )
-          })}
+              );
+            })}
         </tbody>
       </table>
       {ontologyModulesSynced && (
